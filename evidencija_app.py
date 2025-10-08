@@ -14,7 +14,7 @@ class EvidencijaApp:
 
         self.ucenici = []
         self.odabrani_ucenik_index = None
-        
+        self.root = root
         # --- Struktura prozora ---
         self.root.title("Evidencija učenika")
         self.root.geometry("500x400")
@@ -64,7 +64,9 @@ class EvidencijaApp:
         scrollbar = tk.Scrollbar(prikaz_frame, orient="vertical", command=self.listbox.yview)
         scrollbar.grid(row=0, column=1, sticky="NS")
         self.listbox.config(yscrollcommand=scrollbar.set)
-        
+
+        tk.mainloop()
+    
     def dodaj_ucenika(self):
         self.ime = self.ime_entry.get()
         self.prezime = self.prezime_entry.get()
@@ -82,7 +84,7 @@ class EvidencijaApp:
         for ucenik in self.ucenici:
             self.listbox.insert(tk.END, ucenik)
 
-    def odaberi_ucenika:
+    def odaberi_ucenika(self):
         odabrani_indeksi = self.listbox.curselection()
         if not odabrani_indeksi:
             return
@@ -93,16 +95,28 @@ class EvidencijaApp:
         self.ime_entry.delete(0,END)
         self.ime_entry.insert(0,odabrani_ucenik.ime)
         self.prezime_entry.delete(0,END)
-        self.ime_entry.insert(0,odabrani_ucenik.ime)
+        self.ime_entry.insert(0,odabrani_ucenik.prezime)
         self.razred_entry.delete(0,END)
-        self.ime_entry.insert(0,odabrani_ucenik.ime)
+        self.ime_entry.insert(0,odabrani_ucenik.razred)
         
-        
-    def spremi_izmjene:
-        
-        return
-        
+    def spremi_izmjene(self):
+        odabrani_indeksi = self.listbox.curselection()
+        if not odabrani_indeksi:
+            return
 
+        self.odabrani_ucenik_index = odabrani_indeksi[0]
+        odabrani_ucenik = self.ucenici[self.odabrani_ucenik_index]
         
+        odabrani_ucenik.ime = self.ime_entry
+        odabrani_ucenik.prezime = self.prezime_entry
+        odabrani_ucenik.razred = self.razred_entry
+
+        osvjezi_prikaz()
+        
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = EvidencijaApp(root)
+    root.mainloop()
+
 
         
