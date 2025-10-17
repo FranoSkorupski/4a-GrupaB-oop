@@ -119,7 +119,7 @@ class ImenikApp:
                 self.kontakti = [Kontakt(ime, email, telefon) for ime, email, telefon in reader]
             print("Kontakti učitani iz CSV datoteke.")
         except FileNotFoundError:
-            print("Datoteka ne postoji – ništa se ne učitava.")
+            print("Datoteka ne postoji")
             self.kontakti = []
         self.osvjezi_prikaz()
 
