@@ -77,10 +77,24 @@ class ImenikApp:
         email = self.email_entry.get().strip()
         telefon = self.telefon_entry.get().strip()
 
+        #Provjera unosa
+        
         if not (ime and email and telefon):
             print("Unesite sve podatke!")
             return
 
+        if len(ime) <= 2:
+            print("Ime mora imat barem 3 slova")
+            return
+        
+        if "@" not in email:
+            print("Email ne sadrzava potreban @ znak")
+            return
+            
+        if not ((telefon.replace(" ","")).isdigit() and len(telefon.replace(" ","")) == 10):
+            print("Broj mobitela mora sadržavati 10 znamenki")
+            return
+        
         kontakt = Kontakt(ime, email, telefon)
         self.kontakti.append(kontakt)
         self.osvjezi_prikaz()
@@ -129,4 +143,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ImenikApp(root)
     root.mainloop()
-
