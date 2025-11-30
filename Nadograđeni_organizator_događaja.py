@@ -527,7 +527,10 @@ class App(tk.Tk):
     def _delete_from_edit(self, d: Dogadjaj, win: tk.Toplevel):
         if not messagebox.askyesno("Potvrda", f"Jeste li sigurni da želite obrisati '{d.naziv}'?"):
             return
-        self.manager.obrisi_dogadjaj(d.id)
+        try:
+            self.manager.dogadjaji.remove(d)
+        except ValueError:
+            pass
         self.refresh_treeview()
         self.status.set(f"Događaj {d.naziv} obrisan.")
         win.destroy()
