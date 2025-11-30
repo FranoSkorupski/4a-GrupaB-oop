@@ -14,7 +14,7 @@ class Dogadjaj:
         self.lokacija = lokacija
         self.prijave = []
         
-        # parsirati datum u datetime objekt (ako je valjan)
+        # pretvoriti datum u datetime objekt (ako je valjan)
         try:
             self._datum_obj = datetime.strptime(self.datum, "%d.%m.%Y")
         except Exception:
@@ -128,12 +128,12 @@ class EventManager:
 
 # ---------- Provjera unosa ----------
 
-def count_letters(s: str) -> int:
-    """Count Unicode letters in the string."""
+def prebroji_slova(s: str) -> int:
+    # prebrojavanje Unicode slova u stringu
     return sum(1 for ch in s if ch.isalpha())
 
-def is_valid_date_format(s: str) -> bool:
-    """Check date format DD.MM.YYYY and that it is a real date."""
+def tocan_format_datuma(s: str) -> bool:
+    # provjera formata DD.MM.YYYY i jeli pravi datum
     if not re.match(r'^\d{2}\.\d{2}\.\d{4}$', s):
         return False
     try:
@@ -141,7 +141,6 @@ def is_valid_date_format(s: str) -> bool:
         return True
     except ValueError:
         return False
-
 
 # ---------- GUI ----------
 
@@ -155,12 +154,12 @@ class App(tk.Tk):
         self.manager = EventManager()
         self.sort_state = {}
 
-        self.create_style()
-        self.create_menu()
-        self.create_widgets()
-        self.create_statusbar()
+        self.stvori_stil()
+        self.stvori_meni()
+        self.stvori_widgete()
+        self.stvori_statusnu_traku()
 
-    def create_style(self):
+    def stvori_stil(self):
         style = ttk.Style(self)
         try:
             style.theme_use("clam")
@@ -171,7 +170,7 @@ class App(tk.Tk):
         style.configure("TLabel", background="#e6f2ff", font=("Segoe UI", 10))
         style.configure("Treeview", rowheight=22)
 
-    def create_menu(self):
+    def stvori_meni(self):
         menu_bar = tk.Menu(self)
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="Spremi", command=self.spremi)
@@ -190,7 +189,7 @@ class App(tk.Tk):
 
         self.config(menu=menu_bar)
 
-    def create_widgets(self):
+    def stvori_widgete(self):
         top_frame = tk.Frame(self, bg="#99ccff", bd=0)
         top_frame.pack(fill=tk.X, padx=10, pady=10)
 
@@ -268,7 +267,7 @@ class App(tk.Tk):
         self.search_var.set("")
         self.refresh_treeview()
 
-    def create_statusbar(self):
+    def stvori_statusnu_traku(self):
         self.status = tk.StringVar()
         self.status.set("Spreman")
         status_bar = tk.Label(self, textvariable=self.status, bg="#cce6ff", fg="#003366", bd=1, relief=tk.SUNKEN, anchor="w")
@@ -277,21 +276,21 @@ class App(tk.Tk):
     # ---------- Provjera unosa ----------
     def validate_inputs(self, naziv, datum, lokacija, tip, extra):
         # naziv najmanje 3 slova
-        if count_letters(naziv) < 3:
-            messagebox.showerror("Neispravan unos", "Naziv mora sadržavati najmanje 3 slova iz abecede.")
+        if prebroji_slova(naziv) < 3:
+            messagebox.showerror("Neispravan unos", "Naziv mora sadržavati najmanje 3 slova.")
             return False
         # datum format DD.MM.YYYY
-        if not is_valid_date_format(datum):
+        if not tocan_format_datuma(datum):
             messagebox.showerror("Neispravan unos", "Datum mora biti u obliku DD.MM.YYYY i biti valjan datum.")
             return False
         # lokacija najmanje 3 slova
-        if count_letters(lokacija) < 3:
-            messagebox.showerror("Neispravan unos", "Lokacija mora sadržavati najmanje 3 slova iz abecede.")
+        if prebroji_slova(lokacija) < 3:
+            messagebox.showerror("Neispravan unos", "Lokacija mora sadržavati najmanje 3 slova.")
             return False
         # extra ovisno o tipu
         if tip == "Predavanje":
-            if count_letters(extra) < 3:
-                messagebox.showerror("Neispravan unos", "Ime predavača mora sadržavati najmanje 3 slova iz abecede.")
+            if prebroji_slova(extra) < 3:
+                messagebox.showerror("Neispravan unos", "Ime predavača mora sadržavati najmanje 3 slova.")
                 return False
         else:  # Radionica -> extra mora biti isključivo broj
             if not re.fullmatch(r'\d+', extra):
@@ -402,8 +401,8 @@ class App(tk.Tk):
         if ime is None:
             return
         ime = ime.strip()
-        if count_letters(ime) < 3:
-            messagebox.showerror("Neispravan unos", "Ime sudionika mora sadržavati najmanje 3 slova iz abecede.")
+        if prebroji_slova(ime) < 3:
+            messagebox.showerror("Neispravan unos", "Ime sudionika mora sadržavati najmanje 3 slova.")
             return
         if isinstance(target, Radionica) and target.slobodna_mjesta() <= 0:
             messagebox.showinfo("Obavijest", "Radionica je popunjena!")
@@ -492,17 +491,17 @@ class App(tk.Tk):
             new_l = e_l.get().strip()
             new_x = e_x.get().strip()
 
-            if count_letters(new_n) < 3:
+            if prebroji_slova(new_n) < 3:
                 messagebox.showerror("Greška", "Naziv mora imati najmanje 3 slova.")
                 return
-            if not is_valid_date_format(new_d):
+            if not tocan_format_datuma(new_d):
                 messagebox.showerror("Greška", "Datum nije ispravan.")
                 return
-            if count_letters(new_l) < 3:
+            if prebroji_slova(new_l) < 3:
                 messagebox.showerror("Greška", "Lokacija mora imati najmanje 3 slova.")
                 return
             if isinstance(d, Predavanje):
-                if count_letters(new_x) < 3:
+                if prebroji_slova(new_x) < 3:
                     messagebox.showerror("Greška", "Ime predavača mora imati najmanje 3 slova.")
                     return
                 d.predavac = new_x
